@@ -11,4 +11,16 @@ apiRoutes.post("/addsitedata", AdminSiteData.addSiteDetails);
 
 apiRoutes.post("/addnavlink", AdminSiteData.addNavLink);
 
+apiRoutes.post("/removenavlink", AdminSiteData.removeNavLink);
+
+apiRoutes.post("/addsubject", AdminSiteData.addSubject);
+
+apiRoutes.post("/removesubject", AdminSiteData.removeSubject);
+
+apiRoutes.post("/addsubjectopic", AdminSiteData.addSubjectTopic);
+
+apiRoutes.post("/addsubjecsubtopic", AdminSiteData.addSubjectSubtopic);
+
+apiRoutes.post("/updatedetails", AdminSiteData.updateSiteData);
+
 module.exports = apiRoutes;

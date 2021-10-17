@@ -63,3 +63,205 @@ module.exports.addNavLink = async (req, res) => {
     res.status(500).send("Server Error");
   }
 };
+
+// remove subject
+module.exports.removeNavLink = async (req, res) => {
+  try {
+    const check = { instituteName: "dcrust" };
+    const { navlinks } = await SiteDataSchema.findOne(check);
+
+    const navlink = req.body;
+    for (let i = 0; i < navlinks.length; i++) {
+      if (navlinks[i].name === navlink.name) {
+        navlinks.splice(i, 1);
+        break;
+      }
+    }
+
+    await SiteDataSchema.updateOne(
+      check,
+      { $set: { navlinks } },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.send("Succesfully saved.");
+      }
+    )
+      .clone()
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+// add subject
+module.exports.addSubject = async (req, res) => {
+  try {
+    const check = { instituteName: "dcrust" };
+    const details = await SiteDataSchema.findOne(check);
+
+    console.log(req.body);
+
+    await SiteDataSchema.updateOne(
+      check,
+      { $set: { subjects: [...details.subjects, req.body] } },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.send("Succesfully saved.");
+      }
+    )
+      .clone()
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+module.exports.removeSubject = async (req, res) => {
+  try {
+    const check = { instituteName: "dcrust" };
+    const { subjects } = await SiteDataSchema.findOne(check);
+
+    console.log(subjects);
+    console.log(req.body);
+
+    for (let i = 0; i < subjects.length; i++) {
+      if (subjects[i].name === req.body.name) {
+        subjects.splice(i, 1);
+        break;
+      }
+    }
+
+    await SiteDataSchema.updateOne(
+      check,
+      { $set: { subjects } },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.send("Succesfully saved.");
+      }
+    )
+      .clone()
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+// add topic
+module.exports.addSubjectTopic = async (req, res) => {
+  try {
+    const check = { instituteName: "dcrust" };
+    const { subjects } = await SiteDataSchema.findOne(check);
+
+    console.log(req.body);
+
+    for (let i = 0; i < subjects.length; i++) {
+      if (subjects[i].name === req.body.subject) {
+        subjects[i].topics.push({
+          topic: req.body.topic,
+          subtopics: [],
+        });
+        break;
+      }
+    }
+
+    await SiteDataSchema.updateOne(
+      check,
+      { $set: { subjects } },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.send("Succesfully saved.");
+      }
+    )
+      .clone()
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+module.exports.addSubjectSubtopic = async (req, res) => {
+  try {
+    const check = { instituteName: "dcrust" };
+    const { subjects } = await SiteDataSchema.findOne(check);
+
+    console.log(req.body);
+
+    let updateSubject = subjects.find(
+      (subject) => subject.name === req.body.subject
+    );
+    let updateTopic = updateSubject.topics.find(
+      (topicItem) => topicItem.topic === req.body.topic
+    );
+    updateTopic.subtopics.push({
+      name: req.body.subtopic,
+      link: req.body.subtopiclink,
+    });
+
+    await SiteDataSchema.updateOne(
+      check,
+      { $set: { subjects } },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.send("Succesfully saved.");
+      }
+    )
+      .clone()
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+module.exports.updateSiteData = async (req, res) => {
+  try {
+    const check = { instituteName: "dcrust" };
+    const { navlinks, subjects } = await SiteDataSchema.findOne(check);
+
+    console.log(req.body);
+
+    if (req.body.type === "menu") {
+      let updateNavlink = navlinks.find(
+        (navlink) => navlink.name === req.body.oldDetails.name
+        // navlink.link === req.body.oldDetails.link
+      );
+      updateNavlink.name = req.body.newDetails.name;
+      updateNavlink.link = req.body.newDetails.link;
+    } else if (req.body.type === "subject") {
+      let updateSubjectName = subjects.find(
+        (subject) => subject.name === req.body.oldDetails.name
+      );
+      updateSubjectName.name = req.body.newDetails.name;
+    }
+
+    await SiteDataSchema.updateOne(
+      check,
+      { $set: { navlinks, subjects } },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.send("Succesfully saved.");
+      }
+    )
+      .clone()
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+};
