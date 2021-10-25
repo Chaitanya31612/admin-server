@@ -166,7 +166,7 @@ module.exports.addSubjectTopic = async (req, res) => {
     for (let i = 0; i < subjects.length; i++) {
       if (subjects[i].name === req.body.subject) {
         subjects[i].topics.push({
-          topic: req.body.topic,
+          topic: req.body.name,
           subtopics: [],
         });
         break;
@@ -202,7 +202,7 @@ module.exports.addSubjectSubtopic = async (req, res) => {
       (subject) => subject.name === req.body.subject
     );
     let updateTopic = updateSubject.topics.find(
-      (topicItem) => topicItem.topic === req.body.topic
+      (topicItem) => topicItem.name === req.body.name
     );
     updateTopic.subtopics.push({
       name: req.body.subtopic,
