@@ -33,6 +33,9 @@ app.use(express.urlencoded());
 app.use(cors());
 app.use(helmet());
 
+app.get("/", (req, res) => {
+  res.send("Admin Server");
+});
 app.use("/api", indexRoutes);
 
 app.listen(PORT, () => {
