@@ -256,12 +256,43 @@ module.exports.addSubjectSubtopic = async (req, res) => {
       (subject) => subject.name === req.body.subject
     );
     let updateTopic = updateSubject.topics.find(
-      (topicItem) => topicItem.name === req.body.name
+      (topicItem) => topicItem.name === req.body.topic
     );
     updateTopic.subtopics.push({
       name: req.body.subtopic,
       link: req.body.subtopiclink,
     });
+
+    await SiteDataSchema.updateOne(
+      check,
+      { $set: { subjects } },
+      function (err, doc) {
+        if (err) return res.send(500, { error: err });
+        return res.send("Succesfully saved.");
+      }
+    )
+      .clone()
+      .catch((err) => {
+        console.log(err);
+      });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+};
+
+module.exports.removeSubtopic = async (req, res) => {
+  try {
+    const check = { instituteName: "dcrust" };
+    const { subjects } = await SiteDataSchema.findOne(check);
+
+    console.log(subjects);
+    console.log(req.body);
+
+    subjects
+      .find((subject) => subject.name === req.body.subject)
+      .topics.find((topic) => topic.name === req.body.topic)
+      .subtopics.filter((subtopic) => subtopic.name !== req.body.subtopic);
 
     await SiteDataSchema.updateOne(
       check,
@@ -311,6 +342,15 @@ module.exports.updateSiteData = async (req, res) => {
 
       console.log(updatedTopicName);
       updatedTopicName.name = req.body.newTopicName;
+    } else if (req.body.type === "subtopic") {
+      let updatedSubtopic = subjects
+        .find((subject) => subject.name === req.body.subject)
+        .topics.find((topic) => topic.name === req.body.topic)
+        .subtopics.find((subtopic) => subtopic.name === req.body.subtopic.name);
+
+      console.log(updatedSubtopic);
+      updatedSubtopic.name = req.body.newSubtopicData.name;
+      updatedSubtopic.link = req.body.newSubtopicData.link;
     }
 
     await SiteDataSchema.updateOne(

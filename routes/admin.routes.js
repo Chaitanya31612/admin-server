@@ -19,10 +19,12 @@ apiRoutes.post("/removesubject", AdminSiteData.removeSubject);
 
 apiRoutes.post("/addsubjectopic", AdminSiteData.addSubjectTopic);
 
-apiRoutes.post("/addsubjecsubtopic", AdminSiteData.addSubjectSubtopic);
+apiRoutes.post("/addsubjectsubtopic", AdminSiteData.addSubjectSubtopic);
 
 apiRoutes.post("/updatedetails", AdminSiteData.updateSiteData);
 
 apiRoutes.post("/removetopic", AdminSiteData.removeTopic);
+
+apiRoutes.post("/removesubtopic", AdminSiteData.removeSubtopic);
 
 module.exports = apiRoutes;
