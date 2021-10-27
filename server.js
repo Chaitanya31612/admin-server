@@ -11,17 +11,14 @@ const PORT = process.env.PORT || 5000;
 
 // mongodb connection
 mongoose.connect(
-  process.env.LOCAL_MONGO_URL,
+  process.env.MONGO_URL,
   {
     useUnifiedTopology: true,
     useNewUrlParser: true,
   },
   (error) => {
     if (!error) {
-      console.log(
-        "MongoDb Connection Successful: ",
-        process.env.LOCAL_MONGO_URL
-      );
+      console.log("MongoDb Connection Successful: ", process.env.MONGO_URL);
     } else {
       console.log("database not working", error);
     }
